@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Real hardware access — no permission is requested for data we then fake. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Weather briefing needs a real location fix. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- "X'e mesaj yaz" needs to look the contact up. -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <!-- Genuine autonomous SMS sending (see SmsSender.kt) — a real runtime
+         permission grant, no special "default SMS app" status needed. -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <!-- Do Not Disturb toggle (double-knock shortcut) requires this SPECIAL
+         permission, which the user must grant via Settings > Notifications >
+         Do Not Disturb access — it cannot be requested as a normal runtime
+         permission dialog. Guide the user there from Settings screen. -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
+    <!-- Tablet-first: not required, but signals this is not phone-optimized -->
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="true" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+
+    <application
+        android:name=".OrionApplication"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Orion.Splash"
+        android:supportsRtl="true"
+        android:largeScreens="true"
+        android:xlargeScreens="true"
+        tools:targetApi="34">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:theme="@style/Theme.Orion.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- WhatsApp zero-tap send (see OrionAccessibilityService.kt's warning
+             comment before enabling this in Settings > Accessibility).
+             The intent-filter below is what makes it appear in that list at
+             all — it's still off by default until the USER manually enables
+             it there; nothing here turns it on automatically. -->
+        <service
+            android:name=".accessibility.OrionAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+    </application>
+</manifest>

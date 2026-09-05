@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">O.R.I.O.N.</string>
+    <string name="accessibility_service_description">O.R.I.O.N.\'ın sesli komutla mesaj gönderme gibi işlemleri onayınız olmadan tamamlaması için kullanılır. Ekranda göründüğünü okuyabilir ve sizin adınıza dokunabilir — yalnızca güvendiğiniz bir kişisel asistan için açın.</string>
+</resources>
