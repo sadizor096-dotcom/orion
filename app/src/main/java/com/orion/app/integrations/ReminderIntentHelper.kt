@@ -3,21 +3,17 @@ package com.orion.app.integrations
 import android.content.Context
 import android.content.Intent
 import android.provider.AlarmClock
+import android.provider.CalendarContract
 
-/**
- * Fully autonomous, real, one-shot: AlarmClock.ACTION_SET_REMINDER is a
- * standard Android implicit intent — no runtime permission needed, works
- * with whatever clock/reminders app the user has set as default. This is
- * the one piece of "control other apps" that genuinely works exactly the
- * way you described: "Orion yarına 14:00'e X hatırlatıcısını kur" → done,
- * no extra taps.
- */
 object ReminderIntentHelper {
-    fun setReminder(context: Context, title: String, epochMillis: Long) {
-        val intent = Intent(AlarmClock.ACTION_SET_REMINDER).apply {
-            putExtra(AlarmClock.EXTRA_MESSAGE, title)
-            putExtra(AlarmClock.EXTRA_HOUR, 0) // overridden by EXTRA_ALARM below where supported
-            putExtra("android.intent.extra.alarm.TIME", epochMillis)
+
+    fun setReminder(context: Context, title: String, startEpochMillis: Long, durationMinutes: Int = 30) {
+        val endEpochMillis = startEpochMillis + durationMinutes * 60_000L
+        val intent = Intent(Intent.ACTION_INSERT).apply {
+            data = CalendarContract.Events.CONTENT_URI
+            putExtra(CalendarContract.Events.TITLE, title)
+            putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startEpochMillis)
+            putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endEpochMillis)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(intent)
@@ -28,7 +24,7 @@ object ReminderIntentHelper {
             putExtra(AlarmClock.EXTRA_HOUR, hour)
             putExtra(AlarmClock.EXTRA_MINUTES, minute)
             putExtra(AlarmClock.EXTRA_MESSAGE, label)
-            putExtra(AlarmClock.EXTRA_SKIP_UI, true) // no confirmation screen — truly one-shot
+            putExtra(AlarmClock.EXTRA_SKIP_UI, true)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(intent)
