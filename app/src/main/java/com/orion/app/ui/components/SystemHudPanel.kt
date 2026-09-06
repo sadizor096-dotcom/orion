@@ -1,4 +1,6 @@
 package com.orion.app.ui.components
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bolt
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -192,7 +194,7 @@ private fun BatteryIconRow(percent: Int, charging: Boolean) {
             // empty (dark) and filled (green/red) portions of the icon.
             if (charging) {
                 androidx.compose.material3.Icon(
-                    androidx.compose.material.icons.Icons.Filled.Bolt,
+                    Icons.Filled.Bolt,
                     contentDescription = "Charging",
                     tint = Color.Black,
                     modifier = Modifier
